@@ -71,7 +71,7 @@ function initMap() {
 
     userLocationPromise.then(userLocation => {
 
-        fetch('https://cdn.jsdelivr.net/gh/Qwen2020/composite@main/dealers-dummy.json')
+        fetch('https://cdn.jsdelivr.net/gh/Qwen2020/Webflow@main/maps/dummy-data.json')
             .then(response => response.json())
             .then(data => {
             // Replace locations with companies
