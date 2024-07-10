@@ -42,7 +42,15 @@ When you create your first row you should enter some placeholder content similar
 
 Text elements can also be assigned the following attributes to apply formatting to them; 
 
-**[data-format-number=true]** - This will format the text as a number and apply short hand for millions, billions and trillions. 
+| Attribute  | Description |
+| ---------- | ----------- |
+| **[data-format-number=true]** | This will format the text as a number and apply short hand for millions, billions and trillions. |
+| **[data-negative-color="#HEXCODE"]** | If the number is negative then the texts colour will change to match that of the hex code applied to the value of this attribute. |
+| **[data-format-fixto="NUMBER"]** | The value of this attribute will limit a number to the specifced demical places for example a value of 3 would restrict a number to 3 decimal places. This should be combined with [data-format-number=true] |
+
+Text elements can also be assigned the following attributes to apply formatting to them; 
+
+**[data-format-number=true]**  This will format the text as a number and apply short hand for millions, billions and trillions. 
 
 **[data-negative-color="#HEXCODE"]** - If the number is negative then the texts colour will change to match that of the hex code applied to the value of this attribute. 
 
