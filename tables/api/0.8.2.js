@@ -11,7 +11,7 @@ class TableManager {
         this.setupPaginationControls();
     }
 
-    formatDate(date: Date, format: string): string {
+    formatDate(date, format) {
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is zero-based
         const year = date.getFullYear();
@@ -30,7 +30,7 @@ class TableManager {
                        .replace("ss", seconds);
     
         return result;
-      }
+    }
 
     initializeTemplateRow() {
         const tbody = this.tableElement.querySelector('tbody');
