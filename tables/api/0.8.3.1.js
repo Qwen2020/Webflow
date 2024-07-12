@@ -170,16 +170,24 @@ class TableManager {
             row.querySelectorAll('[data-api-table-row-index]').forEach(element => {
                 element.textContent = startIndex + index + 1; // Adjusted to reflect actual data index
             });        
-            
+
             row.querySelectorAll('[data-api-table-text]').forEach(element => {
                 const attr = element.getAttribute('data-api-table-text');
                 if (item[attr] !== undefined) {
+
+
+                    if (numericValue === null) {
+                        element.textContent = "N/A";
+                    } else {
+
+
                     // Existing numeric formatting
                     if (element.hasAttribute('data-negative-color') || element.hasAttribute('data-format-number')) {
                         const numericValue = parseFloat(item[attr]);
                         if (!isNaN(numericValue)) {
                             let formattedValue = this.formatNumber(numericValue);
-        
+
+                        
                             // New: Limit decimal places
                             if (element.hasAttribute('data-format-fixto')) {
                                 const decimals = parseInt(element.getAttribute('data-format-fixto'), 10);
@@ -209,7 +217,10 @@ class TableManager {
                             element.parentNode.style.color = ''; // Reset to default color
                         }
                     }
+
                 }
+                
+            }
             });
 
             // Handle image sources
