@@ -219,7 +219,9 @@ class TableManager {
                     }
 
                 }
-                
+
+                }
+
             }
             });
 
