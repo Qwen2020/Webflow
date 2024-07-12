@@ -165,7 +165,12 @@ class TableManager {
         const fragment = document.createDocumentFragment();
         pageData.forEach((item, index) => {
             const row = this.templateRow.cloneNode(true);
-        
+
+            // Populate row with data
+            row.querySelectorAll('[data-api-table-row-index]').forEach(element => {
+                element.textContent = startIndex + index + 1; // Adjusted to reflect actual data index
+            });        
+            
             row.querySelectorAll('[data-api-table-text]').forEach(element => {
                 const attr = element.getAttribute('data-api-table-text');
                 if (item[attr] !== undefined) {
