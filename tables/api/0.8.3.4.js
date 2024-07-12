@@ -174,49 +174,42 @@ class TableManager {
             row.querySelectorAll('[data-api-table-text]').forEach(element => {
                 const attr = element.getAttribute('data-api-table-text');
                 if (item[attr] !== undefined) {
-                    // Correctly check item[attr] for null
                     if (item[attr] === null) {
-                        element.textContent = "N/A";
-                    } else {
-                        // Move the declaration of numericValue inside the else block
-                        let numericValue; // Declaration moved here
-            
-                        // Existing numeric formatting
-                        if (element.hasAttribute('data-negative-color') || element.hasAttribute('data-format-number')) {
-                            numericValue = parseFloat(item[attr]);
-                            if (!isNaN(numericValue)) {
-                                let formattedValue = this.formatNumber(numericValue);
-            
-                                // New: Limit decimal places
-                                if (element.hasAttribute('data-format-fixto')) {
-                                    const decimals = parseInt(element.getAttribute('data-format-fixto'), 10);
-                                    formattedValue = numericValue.toFixed(decimals);
-                                }
-            
-                                element.textContent = formattedValue;
-            
-                                // Existing negative color formatting
-                                if (numericValue < 0 && element.hasAttribute('data-negative-color')) {
-                                    element.parentNode.style.color = element.getAttribute('data-negative-color');
-                                } else {
-                                    element.parentNode.style.color = ''; // Reset to default color
-                                }
-                            }
-                        } else if (element.hasAttribute('data-format-time')) {
-                            // New: Time formatting
-                            const format = element.getAttribute('data-format-time');
-                            const date = new Date(item[attr]);
-                            const formattedDate = this.formatDate(date, format); // Assume this.formatDate is implemented
-                            element.textContent = formattedDate;
+                        // Check if the element is a span
+                        if (element.tagName.toLowerCase() === 'span') {
+                            // Set "N/A" to the parent element
+                            element.parentNode.textContent = "N/A";
                         } else {
-                            // Default text content setting
-                            element.textContent = item[attr];
-                            // Reset color to default
-                            if (element.parentNode.style.color !== '') {
+                            // For other elements, set "N/A" directly
+                            element.textContent = "N/A";
+                        }
+                    } else {
+                        let numericValue = parseFloat(item[attr]);
+                        if (!isNaN(numericValue)) {
+                            let formattedValue = this.formatNumber(numericValue);
+            
+                            if (element.hasAttribute('data-format-fixto')) {
+                                const decimals = parseInt(element.getAttribute('data-format-fixto'), 10);
+                                formattedValue = numericValue.toFixed(decimals);
+                            }
+            
+                            element.textContent = formattedValue;
+            
+                            if (numericValue < 0 && element.hasAttribute('data-negative-color')) {
+                                element.parentNode.style.color = element.getAttribute('data-negative-color');
+                            } else {
                                 element.parentNode.style.color = ''; // Reset to default color
                             }
                         }
                     }
+                }
+            });
+            
+            // Handle image sources
+            row.querySelectorAll('[data-api-table-image-source]').forEach(element => {
+                const imageAttr = element.getAttribute('data-api-table-image-source');
+                if (item[imageAttr] !== undefined) {
+                    element.src = item[imageAttr];
                 }
             });
 
