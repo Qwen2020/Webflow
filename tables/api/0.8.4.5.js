@@ -15,9 +15,10 @@ class TableManager {
         } else {
             this.exclusionCriteria = {};
         }
-        this.setupPaginationControls();
-    }
 
+        this.setupPaginationControls();
+        
+    }
 
     // Function to parse the exclusion criteria from the attribute value
     parseExclusionCriteria(attributeValue) {
@@ -34,11 +35,14 @@ class TableManager {
         return criteria;
     }
 
+
     // Function to filter data based on exclusion criteria
     filterData(data, criteria) {
+        console.log('Filtering data with criteria:', criteria);
         return data.filter(item => {
             for (const key in criteria) {
                 if (criteria[key].includes(item[key])) {
+                    console.log(`Excluding item with ${key}=${item[key]}`);
                     return false;
                 }
             }
