@@ -183,7 +183,7 @@ class TableManager {
             if(this.hideAttribute) {
             this.allData = filterData(await response.json(), exclusionCriteria);
             } else {
-                this.allData = await response.json(), exclusionCriteria;
+                this.allData = await response.json();
             }
 
             console.log('Data fetched successfully', this.allData); // Step 2
