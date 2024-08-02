@@ -1,6 +1,6 @@
 # API Tables For Webflow #
 
-This API Tables script is desinged to easily formatted data from json datafeeds into readable tables on the front end of your Webflow projects. 
+This API Tables script is desinged to easily render data from json datafeeds into readable tables on the front end of your Webflow projects. 
 
 We reccomended using Finsweet's table application located in the apps tab inside the Webflow designer for your project to generate a table out of custom elements. 
 
