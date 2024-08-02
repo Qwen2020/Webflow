@@ -45,7 +45,7 @@ Occasionally, datafeeds will have undesirable data contained within them. The re
 
 To hide items, you need to add the hide data attribute to the main table element. This is [data-api-table-hide]. The value of which may look like this: symbol=[TONCOIN]. This will filter any items that have the value of TONCOIN in the symbol key. To filter additional items in the symbol key, we simply separate them by a comma. For example, symbol=[TONCOIN,BTC] will now filter TONCOIN & BTC from appearing in our table. We can filter by multiple keys by separating these by a comma as well. For example, symbol=[TONCOIN],price=[1234,56789].
 
-### Formatting Content ### 
+## Formatting Content ###
 
 Text elements can also be assigned the following attributes to apply formatting to them:
 
