@@ -9,9 +9,12 @@ class TableManager {
         this.totalItems = 0; // Assuming this will be fetched or set somehow
         this.allData = []; // Property to store all fetched data
 
-        this.hideAttribute = tableElement.getAttribute('data-api-table-hide');
-        this.exclusionCriteria = hideAttribute ? parseExclusionCriteria(hideAttribute) : {};
-
+        const hideAttribute = tableElement.getAttribute('data-api-table-hide');
+        if (hideAttribute) {
+            this.exclusionCriteria = this.parseExclusionCriteria(hideAttribute);
+        } else {
+            this.exclusionCriteria = {};
+        }
         this.setupPaginationControls();
     }
 
