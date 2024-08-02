@@ -19,8 +19,8 @@ class TableManager {
 
 
     // Function to parse the exclusion criteria from the attribute value
-    parseExclusionCriteria(attributeValue: string): Record<string, string[]> {
-        const criteria: Record<string, string[]> = {};
+    parseExclusionCriteria(attributeValue) {
+        const criteria = {};
         const regex = /(\w+)=\[(.*?)\]/g;
         let match;
 
@@ -34,7 +34,7 @@ class TableManager {
     }
 
     // Function to filter data based on exclusion criteria
-    filterData(data: any[], criteria: Record<string, string[]>): any[] {
+    filterData(data, criteria) {
         return data.filter(item => {
             for (const key in criteria) {
                 if (criteria[key].includes(item[key])) {
@@ -44,7 +44,6 @@ class TableManager {
             return true;
         });
     }
-
 
 
 
