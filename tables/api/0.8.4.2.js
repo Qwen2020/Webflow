@@ -16,8 +16,6 @@ class TableManager {
     }
 
 
-
-
     // Function to parse the exclusion criteria from the attribute value
     parseExclusionCriteria(attributeValue) {
         const criteria = {};
@@ -179,7 +177,11 @@ class TableManager {
 
 
             // EDITED FOR FILTER. 
+            if(this.hideAttribute) {
             this.allData = filterData(await response.json(), exclusionCriteria);
+            } else {
+                this.allData = await response.json(), exclusionCriteria;
+            }
 
             console.log('Data fetched successfully', this.allData); // Step 2
 
