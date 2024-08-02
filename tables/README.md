@@ -38,6 +38,12 @@ When you create your first row you should enter some placeholder content similar
 
 **[data-api-table-text]** & **[data-api-table-image-source]** will apply the corrspeoding value from the data feed as either the text content or the image source to elements they have been applied too. 
 
+## Hiding Data From Appearing In The Table ##
+
+Occasionally datafeeds will have underisable data contained within them, the reccomendation is to ensure any data is removed from the database, however that isn't always the easiest, for this reason I have added the ability to target specfic items by the data key and values to fitler out the unwanted items. 
+
+To hide items you need to add the hide data attribute to the main table element. This is [data-api-table-hide]. The value of which may look like this; symbol=[TONCOIN]. This will filter any items that have the value of TONCOIN in the symbol key, to filter additonal items in the symbol key we simply seperate them by a comma, for example symbol=[TONCOIN,BTC] will now filter TONCOIN & BTC from appearing in our table. We can filter by multiple keys by seperating these by a comma aswell, for example; symbol=[TONCOIN],price=[1234,56789].
+
 ### Formatting Content #### 
 
 Text elements can also be assigned the following attributes to apply formatting to them; 
