@@ -17,7 +17,6 @@ class TableManager {
         }
 
         this.setupPaginationControls();
-        
     }
 
     // Function to parse the exclusion criteria from the attribute value
@@ -32,6 +31,7 @@ class TableManager {
             criteria[key] = values;
         }
 
+        console.log('Parsed exclusion criteria:', criteria); // Log parsed criteria
         return criteria;
     }
 
@@ -42,7 +42,7 @@ class TableManager {
         return data.filter(item => {
             for (const key in criteria) {
                 if (criteria[key].includes(item[key])) {
-                    console.log(`Excluding item with ${key}=${item[key]}`);
+                    console.log(`Excluding item with ${key}=${item[key]}`, item);
                     return false;
                 }
             }
@@ -182,15 +182,17 @@ class TableManager {
             const response = await fetch(this.apiUrl);
             if (!response.ok) throw new Error('Network response was not ok.');
 
+            const data = await response.json();
+            console.log('Data fetched successfully', data); // Step 2
 
-            // EDITED FOR FILTER. 
-            if(this.hideAttribute) {
-            this.allData = filterData(await response.json(), exclusionCriteria);
+            // Apply filtering
+            if (this.exclusionCriteria) {
+                this.allData = this.filterData(data, this.exclusionCriteria);
             } else {
-                this.allData = await response.json();
+                this.allData = data;
             }
 
-            console.log('Data fetched successfully', this.allData); // Step 2
+            console.log('Filtered data', this.allData); // Step 3
 
             this.totalItems = this.allData.length;
             const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
@@ -212,6 +214,7 @@ class TableManager {
 
         // Prepare new rows in memory before clearing the existing content
         const fragment = document.createDocumentFragment();
+        
         pageData.forEach((item, index) => {
             const row = this.templateRow.cloneNode(true);
 
