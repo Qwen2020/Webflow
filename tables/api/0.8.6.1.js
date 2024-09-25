@@ -225,35 +225,36 @@ class TableManager {
             row.querySelectorAll('[data-api-table-text]').forEach(element => {
                 const attr = element.getAttribute('data-api-table-text');
                 if (item[attr] !== undefined) {
+                    let content = item[attr] === null ? "N/A" : item[attr];
+            
+                    // Check if the element has the data-append attribute
+                    if (element.hasAttribute('data-append')) {
+                        const appendValue = element.getAttribute('data-append');
+                        content += appendValue; // Append the value of data-append to the content
+                    }
+            
                     if (item[attr] === null) {
-
-                        // Check if the element has the data-append attribute
-                        if (element.hasAttribute('data-append')) {
-                            const appendValue = element.getAttribute('data-append');
-                            content += appendValue; // Append the value of data-append to the content
-                        }
-
-                        // Check if the element is a span and set "N/A" to its parent if true
                         if (element.tagName.toLowerCase() === 'span') {
-                            element.parentNode.textContent = "N/A";
+                            element.parentNode.textContent = content;
                         } else {
-                            element.textContent = "N/A";
+                            element.textContent = content;
                         }
                     } else {
-                        let numericValue; // Declaration moved here
-
+                        let numericValue;
+            
                         if (element.hasAttribute('data-negative-color') || element.hasAttribute('data-format-number')) {
                             numericValue = parseFloat(item[attr]);
                             if (!isNaN(numericValue)) {
                                 let formattedValue = this.formatNumber(numericValue);
-
+            
                                 if (element.hasAttribute('data-format-fixto')) {
                                     const decimals = parseInt(element.getAttribute('data-format-fixto'), 10);
                                     formattedValue = numericValue.toFixed(decimals);
                                 }
-
+            
+                                formattedValue += element.hasAttribute('data-append') ? element.getAttribute('data-append') : '';
                                 element.textContent = formattedValue;
-
+            
                                 if (numericValue < 0 && element.hasAttribute('data-negative-color')) {
                                     element.parentNode.style.color = element.getAttribute('data-negative-color');
                                 } else {
@@ -261,15 +262,12 @@ class TableManager {
                                 }
                             }
                         } else if (element.hasAttribute('data-format-time')) {
-                            // Time formatting reintegrated
                             const format = element.getAttribute('data-format-time');
                             const date = new Date(item[attr]);
-                            const formattedDate = this.formatDate(date, format); // Assume this.formatDate is implemented
-                            element.textContent = formattedDate;
+                            const formattedDate = this.formatDate(date, format);
+                            element.textContent = formattedDate + (element.hasAttribute('data-append') ? element.getAttribute('data-append') : '');
                         } else {
-                            // Default text content setting
-                            element.textContent = item[attr];
-                            // Reset color to default
+                            element.textContent = content;
                             if (element.parentNode.style.color !== '') {
                                 element.parentNode.style.color = ''; // Reset to default color
                             }
