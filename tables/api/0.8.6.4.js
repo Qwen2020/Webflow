@@ -243,6 +243,13 @@ class TableManager {
                         content += appendValue; // Append the value of data-append to the content
                     }
     
+                    // Check if the element has the data-timestamp attribute
+                    if (element.hasAttribute('data-timestamp')) {
+                        const format = element.getAttribute('data-timestamp');
+                        const date = new Date(content);
+                        content = this.formatDate(date, format);
+                    }
+    
                     if (item[attr] === null) {
                         if (element.tagName.toLowerCase() === 'span') {
                             element.parentNode.textContent = content;
