@@ -205,7 +205,7 @@ class TableManager {
         }
     }
 
-       populateTable() {
+    populateTable() {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         const pageData = this.allData.slice(startIndex, endIndex);
@@ -219,6 +219,9 @@ class TableManager {
             const row = this.templateRow.cloneNode(true);
     
             // Populate row with data
+            row.querySelectorAll('[data-api-table-row-index]').forEach(element => {
+                element.textContent = startIndex + index + 1; // Adjusted to reflect actual data index
+            });
             row.querySelectorAll('[data-api-table-text]').forEach(element => {
                 const attr = element.getAttribute('data-api-table-text');
                 if (item[attr] !== undefined) {
@@ -302,19 +305,6 @@ class TableManager {
                     element.src = item[imageAttr];
                 }
             });
-    
-            // Check if [data-api-table-text=lineTotal] exists and calculate the total
-            const lineTotalElement = row.querySelector('[data-api-table-text="lineTotal"]');
-            if (lineTotalElement) {
-                let total = 0;
-                row.querySelectorAll('[data-api-table-text]').forEach(element => {
-                    const attr = element.getAttribute('data-api-table-text');
-                    if (attr !== 'lineTotal' && !isNaN(parseFloat(item[attr]))) {
-                        total += parseFloat(item[attr]);
-                    }
-                });
-                lineTotalElement.textContent = total.toFixed(2); // Set the total value
-            }
     
             // Append the prepared row to the fragment
             fragment.appendChild(row);
