@@ -230,7 +230,11 @@ class TableManager {
                     // Check if the element has the data-prepend attribute
                     if (element.hasAttribute('data-prepend')) {
                         const prependValue = element.getAttribute('data-prepend');
-                        content = prependValue + content; // Prepend the value of data-prepend to the content
+                        if (typeof content === 'number' && content < 0) {
+                            content = '-' + prependValue + Math.abs(content); // Prepend after the negative sign
+                        } else {
+                            content = prependValue + content; // Prepend normally
+                        }
                     }
     
                     // Check if the element has the data-append attribute
@@ -258,7 +262,11 @@ class TableManager {
                                     formattedValue = numericValue.toFixed(decimals);
                                 }
     
-                                formattedValue = (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
+                                if (numericValue < 0) {
+                                    formattedValue = '-' + (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + Math.abs(formattedValue);
+                                } else {
+                                    formattedValue = (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
+                                }
                                 formattedValue += element.hasAttribute('data-append') ? element.getAttribute('data-append') : '';
                                 element.textContent = formattedValue;
     
