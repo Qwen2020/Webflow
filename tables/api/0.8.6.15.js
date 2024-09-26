@@ -50,6 +50,9 @@ class TableManager {
         });
     }
 
+
+
+
     formatDate(date, format) {
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is zero-based
@@ -202,19 +205,19 @@ class TableManager {
         }
     }
 
-    populateTable() {
+       populateTable() {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         const pageData = this.allData.slice(startIndex, endIndex);
-
+    
         console.log('Preparing to update DOM with fetched data'); // Step 4
-
+    
         // Prepare new rows in memory before clearing the existing content
         const fragment = document.createDocumentFragment();
-
+    
         pageData.forEach((item, index) => {
             const row = this.templateRow.cloneNode(true);
-
+    
             // Populate row with data
             row.querySelectorAll('[data-api-table-row-index]').forEach(element => {
                 element.textContent = startIndex + index + 1; // Adjusted to reflect actual data index
@@ -223,7 +226,7 @@ class TableManager {
                 const attr = element.getAttribute('data-api-table-text');
                 if (item[attr] !== undefined) {
                     let content = item[attr] === null ? "N/A" : item[attr];
-
+    
                     // Check if the element has the data-prepend attribute
                     if (element.hasAttribute('data-prepend')) {
                         const prependValue = element.getAttribute('data-prepend');
@@ -233,13 +236,13 @@ class TableManager {
                             content = prependValue + content; // Prepend normally
                         }
                     }
-
+    
                     // Check if the element has the data-append attribute
                     if (element.hasAttribute('data-append')) {
                         const appendValue = element.getAttribute('data-append');
                         content += appendValue; // Append the value of data-append to the content
                     }
-
+    
                     // Check if the element has the data-timestamp attribute
                     if (element.hasAttribute('data-timestamp')) {
                         const format = element.getAttribute('data-timestamp');
@@ -253,38 +256,55 @@ class TableManager {
                         }
                     }
 
-                    // Handling formatted numbers (including negative numbers)
-                    if (element.hasAttribute('data-format-number')) {
-                        const numericValue = parseFloat(item[attr]);
-                        if (!isNaN(numericValue)) {
-                            let formattedValue;
-                            if (numericValue < 0) {
-                                formattedValue = `(${Math.abs(numericValue).toLocaleString()})`; // Format negative numbers in parentheses
-                                if (element.hasAttribute('data-prepend')) {
-                                    formattedValue = `(${element.getAttribute('data-prepend')}${Math.abs(numericValue).toLocaleString()})`;
+    
+                    if (item[attr] === null) {
+                        if (element.tagName.toLowerCase() === 'span') {
+                            element.parentNode.textContent = content;
+                        } else {
+                            element.textContent = content;
+                        }
+                    } else {
+                        let numericValue;
+    
+                        if (element.hasAttribute('data-negative-color') || element.hasAttribute('data-format-number')) {
+                            numericValue = parseFloat(item[attr]);
+                            if (!isNaN(numericValue)) {
+                                let formattedValue = this.formatNumber(numericValue);
+    
+                                if (element.hasAttribute('data-format-fixto')) {
+                                    const decimals = parseInt(element.getAttribute('data-format-fixto'), 10);
+                                    formattedValue = numericValue.toFixed(decimals);
                                 }
-                            } else {
-                                formattedValue = numericValue.toLocaleString();
-                                if (element.hasAttribute('data-prepend')) {
-                                    formattedValue = element.getAttribute('data-prepend') + formattedValue;
+    
+                                if (numericValue < 0) {
+                                    formattedValue = '-' + (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + Math.abs(formattedValue);
+                                } else {
+                                    formattedValue = (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
+                                }
+                                formattedValue += element.hasAttribute('data-append') ? element.getAttribute('data-append') : '';
+                                element.textContent = formattedValue;
+    
+                                if (numericValue < 0 && element.hasAttribute('data-negative-color')) {
+                                    element.parentNode.style.color = element.getAttribute('data-negative-color');
+                                } else {
+                                    element.parentNode.style.color = ''; // Reset to default color
                                 }
                             }
-                            if (element.hasAttribute('data-append')) {
-                                formattedValue += element.getAttribute('data-append');
-                            }
-                            element.textContent = formattedValue;
-
-                            // Set color for negative values
-                            if (numericValue < 0 && element.hasAttribute('data-negative-color')) {
-                                element.parentNode.style.color = element.getAttribute('data-negative-color');
-                            } else {
-                                element.parentNode.style.color = ''; // Reset color for positive values
+                        } else if (element.hasAttribute('data-format-time')) {
+                            const format = element.getAttribute('data-format-time');
+                            const date = new Date(item[attr]);
+                            const formattedDate = this.formatDate(date, format);
+                            element.textContent = (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedDate + (element.hasAttribute('data-append') ? element.getAttribute('data-append') : '');
+                        } else {
+                            element.textContent = content;
+                            if (element.parentNode.style.color !== '') {
+                                element.parentNode.style.color = ''; // Reset to default color
                             }
                         }
                     }
                 }
             });
-
+    
             // Handle image sources
             row.querySelectorAll('[data-api-table-image-source]').forEach(element => {
                 const imageAttr = element.getAttribute('data-api-table-image-source');
@@ -292,23 +312,23 @@ class TableManager {
                     element.src = item[imageAttr];
                 }
             });
-
+    
             // Append the prepared row to the fragment
             fragment.appendChild(row);
         });
-
+    
         // Capture current table height
         const tbody = this.tableElement.querySelector('tbody');
         const currentHeight = tbody.offsetHeight;
         tbody.style.height = `${currentHeight}px`; // Set the table height explicitly
-
+    
         // Clear existing content and append new rows
         tbody.innerHTML = ''; // Clear existing content
         tbody.appendChild(fragment); // Append new rows
-
+    
         // Reset table height to auto
         tbody.style.height = 'auto';
-
+    
         // Update pagination controls as needed
         this.updatePaginationControls(Math.ceil(this.totalItems / this.itemsPerPage));
     }
