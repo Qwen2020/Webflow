@@ -249,11 +249,13 @@ class TableManager {
                         const timestamp = parseInt(content, 10); // Parse the content as an integer
                         const date = new Date(timestamp); // Create a Date object using the timestamp
                         if (!isNaN(date.getTime())) { // Check if the date is valid
-                            content = this.formatDate(date, format);
+                            let formattedDate = `${('0' + date.getDate()).slice(-2)}-${('0' + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear().toString().substr(-2)}`;
+                            content = `${formattedDate}`;
                         } else {
                             content = "Invalid Date"; // Handle invalid date
                         }
                     }
+
     
                     if (item[attr] === null) {
                         if (element.tagName.toLowerCase() === 'span') {
