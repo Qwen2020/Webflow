@@ -281,6 +281,7 @@ class TableManager {
                                 } else {
                                     formattedValue = (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
                                 }
+                                
                                 formattedValue += element.hasAttribute('data-append') ? element.getAttribute('data-append') : '';
                                 element.textContent = formattedValue;
     
