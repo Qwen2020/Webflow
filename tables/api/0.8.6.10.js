@@ -247,7 +247,11 @@ class TableManager {
                     if (element.hasAttribute('data-timestamp')) {
                         const format = element.getAttribute('data-timestamp');
                         const date = new Date(content);
-                        content = this.formatDate(date, format);
+                        if (!isNaN(date.getTime())) { // Check if the date is valid
+                            content = this.formatDate(date, format);
+                        } else {
+                            content = "Invalid Date"; // Handle invalid date
+                        }
                     }
     
                     if (item[attr] === null) {
