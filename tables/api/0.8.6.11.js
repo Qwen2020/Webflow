@@ -209,15 +209,15 @@ class TableManager {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         const pageData = this.allData.slice(startIndex, endIndex);
-    
+
         console.log('Preparing to update DOM with fetched data'); // Step 4
-    
+
         // Prepare new rows in memory before clearing the existing content
         const fragment = document.createDocumentFragment();
-    
+
         pageData.forEach((item, index) => {
             const row = this.templateRow.cloneNode(true);
-    
+
             // Populate row with data
             row.querySelectorAll('[data-api-table-row-index]').forEach(element => {
                 element.textContent = startIndex + index + 1; // Adjusted to reflect actual data index
@@ -226,7 +226,7 @@ class TableManager {
                 const attr = element.getAttribute('data-api-table-text');
                 if (item[attr] !== undefined) {
                     let content = item[attr] === null ? "N/A" : item[attr];
-    
+
                     // Check if the element has the data-prepend attribute
                     if (element.hasAttribute('data-prepend')) {
                         const prependValue = element.getAttribute('data-prepend');
@@ -236,24 +236,24 @@ class TableManager {
                             content = prependValue + content; // Prepend normally
                         }
                     }
-    
+
                     // Check if the element has the data-append attribute
                     if (element.hasAttribute('data-append')) {
                         const appendValue = element.getAttribute('data-append');
                         content += appendValue; // Append the value of data-append to the content
                     }
-    
                     // Check if the element has the data-timestamp attribute
                     if (element.hasAttribute('data-timestamp')) {
                         const format = element.getAttribute('data-timestamp');
-                        const date = new Date(content);
+                        const timestamp = parseInt(content, 10); // Parse the content as an integer
+                        const date = new Date(timestamp); // Create a Date object using the timestamp
                         if (!isNaN(date.getTime())) { // Check if the date is valid
                             content = this.formatDate(date, format);
                         } else {
                             content = "Invalid Date"; // Handle invalid date
                         }
                     }
-    
+
                     if (item[attr] === null) {
                         if (element.tagName.toLowerCase() === 'span') {
                             element.parentNode.textContent = content;
@@ -262,17 +262,17 @@ class TableManager {
                         }
                     } else {
                         let numericValue;
-    
+
                         if (element.hasAttribute('data-negative-color') || element.hasAttribute('data-format-number')) {
                             numericValue = parseFloat(item[attr]);
                             if (!isNaN(numericValue)) {
                                 let formattedValue = this.formatNumber(numericValue);
-    
+
                                 if (element.hasAttribute('data-format-fixto')) {
                                     const decimals = parseInt(element.getAttribute('data-format-fixto'), 10);
                                     formattedValue = numericValue.toFixed(decimals);
                                 }
-    
+
                                 if (numericValue < 0) {
                                     formattedValue = '-' + (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + Math.abs(formattedValue);
                                 } else {
@@ -280,7 +280,7 @@ class TableManager {
                                 }
                                 formattedValue += element.hasAttribute('data-append') ? element.getAttribute('data-append') : '';
                                 element.textContent = formattedValue;
-    
+
                                 if (numericValue < 0 && element.hasAttribute('data-negative-color')) {
                                     element.parentNode.style.color = element.getAttribute('data-negative-color');
                                 } else {
@@ -301,7 +301,7 @@ class TableManager {
                     }
                 }
             });
-    
+
             // Handle image sources
             row.querySelectorAll('[data-api-table-image-source]').forEach(element => {
                 const imageAttr = element.getAttribute('data-api-table-image-source');
@@ -309,23 +309,23 @@ class TableManager {
                     element.src = item[imageAttr];
                 }
             });
-    
+
             // Append the prepared row to the fragment
             fragment.appendChild(row);
         });
-    
+
         // Capture current table height
         const tbody = this.tableElement.querySelector('tbody');
         const currentHeight = tbody.offsetHeight;
         tbody.style.height = `${currentHeight}px`; // Set the table height explicitly
-    
+
         // Clear existing content and append new rows
         tbody.innerHTML = ''; // Clear existing content
         tbody.appendChild(fragment); // Append new rows
-    
+
         // Reset table height to auto
         tbody.style.height = 'auto';
-    
+
         // Update pagination controls as needed
         this.updatePaginationControls(Math.ceil(this.totalItems / this.itemsPerPage));
     }
