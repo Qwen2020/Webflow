@@ -277,7 +277,7 @@ class TableManager {
                                 }
     
                                 if (numericValue < 0) {
-                                    formattedValue = '-' + (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + Math.abs(formattedValue);
+                                    formattedValue = '-' + (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
                                 } else {
                                     formattedValue = (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
                                 }
@@ -345,7 +345,7 @@ class TableManager {
         this.createPaginationNumbers(totalPages);
     }
 
-     formatNumber(num) {
+    formatNumber(num) {
         const absNum = Math.abs(num);
         let formattedNum;
     
