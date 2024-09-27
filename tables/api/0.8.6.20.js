@@ -345,11 +345,21 @@ class TableManager {
         this.createPaginationNumbers(totalPages);
     }
 
-    formatNumber(num) {
-        if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
-        if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
-        if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
-        return num.toString();
+     formatNumber(num) {
+        const absNum = Math.abs(num);
+        let formattedNum;
+    
+        if (absNum >= 1e12) {
+            formattedNum = (absNum / 1e12).toFixed(2) + 'T';
+        } else if (absNum >= 1e9) {
+            formattedNum = (absNum / 1e9).toFixed(2) + 'B';
+        } else if (absNum >= 1e6) {
+            formattedNum = (absNum / 1e6).toFixed(2) + 'M';
+        } else {
+            formattedNum = absNum.toString();
+        }
+    
+        return num < 0 ? '-' + formattedNum : formattedNum;
     }
 }
 
