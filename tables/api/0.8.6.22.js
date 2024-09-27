@@ -277,8 +277,11 @@ class TableManager {
                                 }
     
                                 if (numericValue < 0) {
-                                    formattedValue = '-' + (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
-                                } else {
+                                    let value = formattedValue.toString();
+                                    let numericPart = parseFloat(value);
+                                    let nonNumericPart = value.replace(/[0-9.-]/g, '');
+                                    
+                                    formattedValue = '-' + (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + Math.abs(numericPart) + nonNumericPart;                                } else {
                                     formattedValue = (element.hasAttribute('data-prepend') ? element.getAttribute('data-prepend') : '') + formattedValue;
                                 }
                                 
