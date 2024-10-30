@@ -31,18 +31,18 @@ class TableManager {
             criteria[key] = values;
         }
 
-        console.log('Parsed exclusion criteria:', criteria); // Log parsed criteria
+        // console.log('Parsed exclusion criteria:', criteria); // Log parsed criteria
         return criteria;
     }
 
 
     // Function to filter data based on exclusion criteria
     filterData(data, criteria) {
-        console.log('Filtering data with criteria:', criteria);
+       // console.log('Filtering data with criteria:', criteria);
         return data.filter(item => {
             for (const key in criteria) {
                 if (criteria[key].includes(item[key])) {
-                    console.log(`Excluding item with ${key}=${item[key]}`, item);
+                   // console.log(`Excluding item with ${key}=${item[key]}`, item);
                     return false;
                 }
             }
@@ -177,13 +177,13 @@ class TableManager {
     }
 
     async fetchDataAndPopulate() {
-        console.log('fetchDataAndPopulate started'); // Step 1
+        // console.log('fetchDataAndPopulate started'); // Step 1
         try {
             const response = await fetch(this.apiUrl);
             if (!response.ok) throw new Error('Network response was not ok.');
 
             const data = await response.json();
-            console.log('Data fetched successfully', data); // Step 2
+         //   console.log('Data fetched successfully', data); // Step 2
 
             // Apply filtering
             if (this.exclusionCriteria) {
@@ -192,16 +192,16 @@ class TableManager {
                 this.allData = data;
             }
 
-            console.log('Filtered data', this.allData); // Step 3
+          //  console.log('Filtered data', this.allData); // Step 3
 
             this.totalItems = this.allData.length;
             const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
 
             this.updatePaginationControls(totalPages);
             this.populateTable();
-            console.log('DOM updated successfully'); // Step 5
+            // console.log('DOM updated successfully'); // Step 5
         } catch (error) {
-            console.error('Failed to fetch and populate data:', error); // Enhanced Error Logging
+            // console.error('Failed to fetch and populate data:', error); // Enhanced Error Logging
         }
     }
 
@@ -210,7 +210,7 @@ class TableManager {
         const endIndex = startIndex + this.itemsPerPage;
         const pageData = this.allData.slice(startIndex, endIndex);
     
-        console.log('Preparing to update DOM with fetched data'); // Step 4
+       //  console.log('Preparing to update DOM with fetched data'); // Step 4
     
         // Prepare new rows in memory before clearing the existing content
         const fragment = document.createDocumentFragment();
@@ -399,10 +399,10 @@ document.addEventListener('click', function (event) {
                 if (tableElement.tableManager) {
                     tableElement.tableManager.updateApiUrlAndRefetch(newUrl);
                 } else {
-                    console.error('TableManager instance not found for the table');
+                   // console.error('TableManager instance not found for the table');
                 }
             } else {
-                console.error('No sibling [data-api-table] element found');
+                // console.error('No sibling [data-api-table] element found');
             }
         }
     }
