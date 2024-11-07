@@ -323,9 +323,7 @@ class TableManager {
                 const chartAttr = element.getAttribute('data-api-table-chart');
                 if (item[chartAttr] !== undefined) {
                     const chartData = item[chartAttr];
-                    const img = document.createElement('img');
-                    img.src = `data:image/png;base64,${chartData}`;
-                    element.appendChild(img);
+                    element.src = `data:image/png;base64,${chartData}`;
                 }
             });
             // Append the prepared row to the fragment
