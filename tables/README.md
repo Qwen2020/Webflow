@@ -54,3 +54,7 @@ Text elements can also be assigned the following attributes to apply formatting 
 | **[data-format-number=true]** | This will format the text as a number and apply shorthand for millions, billions, and trillions. |
 | **[data-negative-color="#HEXCODE"]** | If the number is negative, then the text's color will change to match that of the hex code applied to the value of this attribute. |
 | **[data-format-fixto="NUMBER"]** | The value of this attribute will limit a number to the specified decimal places. For example, a value of 3 would restrict a number to 3 decimal places. This should be combined with [data-format-number=true]. |
+
+## Licensing ###
+
+Unathorized use, modication, or distrubiton of this script is not permitted while in a Beta, please contact me if you'd like to use this. 
