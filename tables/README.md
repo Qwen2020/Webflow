@@ -57,4 +57,4 @@ Text elements can also be assigned the following attributes to apply formatting 
 
 ## Licensing ###
 
-Unathorized use, modication, or distrubiton of this script is not permitted while in a Beta, please contact me if you'd like to use this. 
+Unathorized use, modication, or distrubiton of this script is not permitted while in a Beta (Below V1), please contact me if you'd like to use this. 
