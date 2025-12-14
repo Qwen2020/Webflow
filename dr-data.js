@@ -202,8 +202,25 @@
 
   /**
    * Discover all data sources on the page
+   * Supports both:
+   * 1. Elements with data-dr-source attribute
+   * 2. Global DataDrConfig.sources object
    */
   function discoverSources() {
+    // Method 1: Check for global config
+    if (window.DataDrConfig && window.DataDrConfig.sources) {
+      const configSources = window.DataDrConfig.sources;
+      Object.keys(configSources).forEach((id) => {
+        const url = configSources[id];
+        if (url && !state.sources[id]) {
+          state.sources[id] = { url, element: null };
+          state.stats.sources++;
+          log('Config source:', id, url);
+        }
+      });
+    }
+
+    // Method 2: Elements with data-dr-source
     const elements = document.querySelectorAll('[data-dr-source]');
 
     elements.forEach((el) => {
@@ -213,7 +230,7 @@
       if (url && !state.sources[id]) {
         state.sources[id] = { url, element: el };
         state.stats.sources++;
-        log('Discovered source:', id, url);
+        log('Element source:', id, url);
       }
     });
 
