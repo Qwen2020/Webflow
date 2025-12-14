@@ -1,15 +1,24 @@
 /**
  * Data Dr - Data Rendering Library
- * Version: 1.0.0
+ * Version: 1.2.0
  *
  * Renders external JSON data into HTML elements using data attributes.
  *
  * Usage:
  * <script src="data-dr.js"></script>
  *
- * Attributes:
- * - data-dr-source="URL" - Define a data source
- * - data-dr-source-id="name" - Name the source for reference
+ * Source Definition (pick one method):
+ *
+ * Method 1 - Body tag attributes (recommended):
+ * <body data-dr-src-posts="https://api.example.com/posts"
+ *       data-dr-src-users="https://api.example.com/users">
+ *
+ * Method 2 - Global config object (legacy):
+ * <script>
+ * window.DataDrConfig = { sources: { posts: "https://..." } };
+ * </script>
+ *
+ * Binding Attributes:
  * - data-dr-bind="sourceId:path.to.field" - Bind text content
  * - data-dr-loop="sourceId:path.to.array" - Loop over array
  * - data-dr-if="sourceId:path.to.field" - Conditional show (truthy)
@@ -202,12 +211,27 @@
 
   /**
    * Discover all data sources on the page
-   * Supports both:
-   * 1. Elements with data-dr-source attribute
-   * 2. Global DataDrConfig.sources object
+   * Supports multiple methods:
+   * 1. Body tag with data-dr-src-* attributes (recommended)
+   * 2. Global DataDrConfig.sources object (legacy)
+   * 3. Element with data-dr-sources marker (legacy)
+   * 4. Elements with data-dr-source attribute (legacy)
    */
   function discoverSources() {
-    // Method 1: Check for global config
+    // Method 1: Check body tag for data-dr-src-* attributes (recommended)
+    Array.from(document.body.attributes).forEach((attr) => {
+      if (attr.name.startsWith('data-dr-src-')) {
+        const id = attr.name.substring('data-dr-src-'.length);
+        const url = attr.value;
+        if (url && !state.sources[id]) {
+          state.sources[id] = { url, element: document.body };
+          state.stats.sources++;
+          log('Body source:', id, url);
+        }
+      }
+    });
+
+    // Method 2: Check for global config (legacy support)
     if (window.DataDrConfig && window.DataDrConfig.sources) {
       const configSources = window.DataDrConfig.sources;
       Object.keys(configSources).forEach((id) => {
@@ -220,7 +244,23 @@
       });
     }
 
-    // Method 2: Elements with data-dr-source
+    // Method 3: Element with data-dr-sources marker (legacy)
+    const configElement = document.querySelector('[data-dr-sources]');
+    if (configElement && configElement !== document.body) {
+      Array.from(configElement.attributes).forEach((attr) => {
+        if (attr.name.startsWith('data-dr-src-')) {
+          const id = attr.name.substring('data-dr-src-'.length);
+          const url = attr.value;
+          if (url && !state.sources[id]) {
+            state.sources[id] = { url, element: configElement };
+            state.stats.sources++;
+            log('Attribute source:', id, url);
+          }
+        }
+      });
+    }
+
+    // Method 4: Elements with data-dr-source (legacy support)
     const elements = document.querySelectorAll('[data-dr-source]');
 
     elements.forEach((el) => {
